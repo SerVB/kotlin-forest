@@ -23,7 +23,82 @@
  */
 package com.github.servb.kotlin.forest
 
+import java.util.Random
+
+val random = Random()
+
 fun main(args : Array<String>) {
-    val s = Squirrel(Gender.MALE)
-    println(s.gender.toString())
+	var trees = ArrayList<AbstractTree>()
+	for (i in 1..5) {
+		trees.add(Fir(trees))
+		trees.add(Pine(trees))
+		trees.add(Oak(trees))
+		trees.add(Birch(trees))
+		trees.add(Maple(trees))
+		trees.add(Walnut(trees))
+	}
+	
+	var animals = ArrayList<AbstractAnimal>()
+	
+	for (i in 1..10) {
+		animals.add(Squirrel(trees[0], Gender.MALE))
+		animals.add(Squirrel(trees[1], Gender.FEMALE))
+		
+		animals.add(Chipmunk(trees[0], Gender.MALE))
+		animals.add(Chipmunk(trees[1], Gender.FEMALE))
+		
+		animals.add(Badger(trees[0], Gender.MALE))
+		animals.add(Badger(trees[1], Gender.FEMALE))
+		
+		animals.add(FlyingSquirrel(trees[0], Gender.MALE))
+		animals.add(FlyingSquirrel(trees[1], Gender.FEMALE))
+		
+		animals.add(Woodpecker(trees[0], Gender.MALE))
+		animals.add(Woodpecker(trees[1], Gender.FEMALE))
+	}
+	
+	var predators = ArrayList<Predator>()
+	for (i in 1..5) {
+		predators.add(Kite(trees[0], Gender.MALE))
+		predators.add(Kite(trees[1], Gender.FEMALE))
+		predators.add(Volf(trees[0], Gender.MALE))
+		predators.add(Volf(trees[1], Gender.FEMALE))
+	}
+
+	var newAnimals = ArrayList<AbstractAnimal>()
+	var newPredators = ArrayList<Predator>()
+	
+	for (i in 1..100) {
+		for (tree in trees) {
+			tree.update()
+		}
+		
+		var j = 0
+		while (j < animals.size) {
+			animals[j].update(animals, newAnimals)
+			if (animals[j].foodLevel <= FOOD_DIE) {
+				animals.removeAt(j)
+			} else {
+				++j
+			}
+		}
+		
+		animals.addAll(newAnimals)
+		newAnimals.clear()
+		
+		j = 0
+		while (j < predators.size) {
+			predators[j].update(animals, predators, newPredators)
+			if (predators[j].foodLevel <= FOOD_DIE) {
+				predators.removeAt(j)
+			} else {
+				++j
+			}
+		}
+		
+		predators.addAll(newPredators)
+		newPredators.clear()
+		
+		println("Step: $i, animals: ${animals.size}, kites: ${countKites(predators)}, volves: ${countVolves(predators)}")
+	}
 }

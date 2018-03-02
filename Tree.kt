@@ -25,30 +25,50 @@ package com.github.servb.kotlin.forest
 
 import java.util.ArrayList;
 
-open class AbstractTree(var nearTrees : ArrayList<AbstractTree>) {
-
+enum class Food {
+	NO,
+	NUT,
+	CONE,
+	LEAVE,
+	WORM,
+	ROOT;
 }
 
-class Fir(nearTrees : ArrayList<AbstractTree>) : AbstractTree(nearTrees) {
+data class Part(var food : Food, var count : Int)
 
+val COUNT = 1
+val UPDATE_RATE = 4
+val INCREMENT = 20
+
+open class AbstractTree(var nearTrees : ArrayList<AbstractTree>,
+						var top : Part,
+						var middle : Part,
+						var bottom : Part) {
+
+	fun update() {
+		if (random.nextInt(UPDATE_RATE) == 0) {
+			top.count += INCREMENT
+			middle.count += INCREMENT
+			bottom.count += INCREMENT
+		}
+	}
+	
 }
 
-class Pine(nearTrees : ArrayList<AbstractTree>) : AbstractTree(nearTrees) {
+class Fir(nearTrees : ArrayList<AbstractTree>)
+	: AbstractTree(nearTrees, Part(Food.CONE, COUNT), Part(Food.WORM, COUNT), Part(Food.CONE, COUNT))
 
-}
+class Pine(nearTrees : ArrayList<AbstractTree>)
+	: AbstractTree(nearTrees, Part(Food.CONE, COUNT), Part(Food.WORM, COUNT), Part(Food.CONE, COUNT))
 
-class Oak(nearTrees : ArrayList<AbstractTree>) : AbstractTree(nearTrees) {
+class Oak(nearTrees : ArrayList<AbstractTree>)
+	: AbstractTree(nearTrees, Part(Food.LEAVE, COUNT), Part(Food.WORM, COUNT), Part(Food.ROOT, COUNT))
 
-}
+class Birch(nearTrees : ArrayList<AbstractTree>)
+	: AbstractTree(nearTrees, Part(Food.LEAVE, COUNT), Part(Food.WORM, COUNT), Part(Food.ROOT, COUNT))
 
-class Birch(nearTrees : ArrayList<AbstractTree>) : AbstractTree(nearTrees) {
+class Maple(nearTrees : ArrayList<AbstractTree>)
+	: AbstractTree(nearTrees, Part(Food.LEAVE, COUNT), Part(Food.WORM, COUNT), Part(Food.ROOT, COUNT))
 
-}
-
-class Maple(nearTrees : ArrayList<AbstractTree>) : AbstractTree(nearTrees) {
-
-}
-
-class Walnut(nearTrees : ArrayList<AbstractTree>) : AbstractTree(nearTrees) {
-
-}
+class Walnut(nearTrees : ArrayList<AbstractTree>)
+	: AbstractTree(nearTrees, Part(Food.NUT, COUNT), Part(Food.WORM, COUNT), Part(Food.NUT, COUNT))
