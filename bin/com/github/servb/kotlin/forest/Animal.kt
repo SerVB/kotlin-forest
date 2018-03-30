@@ -170,7 +170,7 @@ class Kite(nowTree : AbstractTree, gender : Gender) : Predator(nowTree, gender) 
 			for (kite in predators) {
 				if (kite::class == Kite::class &&
 						kite.gender != this.gender && kite.nowTree === this.nowTree) {
-					for (i in 1..CHILD_COUNT) {
+					for (_i in 1..CHILD_COUNT) {
 						newPredators.add(Kite(nowTree,
 								if (this.gender == Gender.MALE) Gender.FEMALE else Gender.MALE))
 					}
@@ -181,20 +181,20 @@ class Kite(nowTree : AbstractTree, gender : Gender) : Predator(nowTree, gender) 
 	
 }
 
-val VOLF_CAN_EAT = 1
+val WOLF_CAN_EAT = 1
 val MAX_VOLVES = 30
 
-fun countVolves(predators : ArrayList<Predator>) : Int {
+fun countWolves(predators : ArrayList<Predator>) : Int {
 	var i = 0
 	for (predator in predators) {
-		if (predator::class == Volf::class) {
+		if (predator::class == Wolf::class) {
 			++i
 		}
 	}
 	return i
 }
 
-class Volf(nowTree : AbstractTree, gender : Gender) : Predator(nowTree, gender) {
+class Wolf(nowTree : AbstractTree, gender : Gender) : Predator(nowTree, gender) {
 	
 	override fun update(animals : ArrayList<AbstractAnimal>,
 			            predators : ArrayList<Predator>, newPredators : ArrayList<Predator>) {
@@ -212,18 +212,18 @@ class Volf(nowTree : AbstractTree, gender : Gender) : Predator(nowTree, gender) 
 			} else {
 				++i
 			}
-			if (eaten >= VOLF_CAN_EAT) {
+			if (eaten >= WOLF_CAN_EAT) {
 				break
 			}
 		}
 		
-		if (countVolves(predators) + countVolves(newPredators) < MAX_VOLVES &&
+		if (countWolves(predators) + countWolves(newPredators) < MAX_VOLVES &&
 				FOOD_DIE < foodLevel && random.nextInt(CHILD_RATE) == 0) {
-			for (volf in predators) {
-				if (volf::class == Volf::class &&
-						volf.gender != this.gender && volf.nowTree === this.nowTree) {
-					for (i in 1..CHILD_COUNT) {
-						newPredators.add(Volf(nowTree,
+			for (wolf in predators) {
+				if (wolf::class == Wolf::class &&
+						wolf.gender != this.gender && wolf.nowTree === this.nowTree) {
+					for (_i in 1..CHILD_COUNT) {
+						newPredators.add(Wolf(nowTree,
 								if (this.gender == Gender.MALE) Gender.FEMALE else Gender.MALE))
 					}
 				}

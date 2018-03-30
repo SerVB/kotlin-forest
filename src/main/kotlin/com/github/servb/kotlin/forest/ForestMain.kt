@@ -61,8 +61,8 @@ fun main(args : Array<String>) {
     for (i in 1..5) {
         predators.add(Kite(trees[0], Gender.MALE))
         predators.add(Kite(trees[1], Gender.FEMALE))
-        predators.add(Volf(trees[0], Gender.MALE))
-        predators.add(Volf(trees[1], Gender.FEMALE))
+        predators.add(Wolf(trees[0], Gender.MALE))
+        predators.add(Wolf(trees[1], Gender.FEMALE))
     }
 
     var newAnimals = ArrayList<AbstractAnimal>()
@@ -99,6 +99,6 @@ fun main(args : Array<String>) {
         predators.addAll(newPredators)
         newPredators.clear()
         
-        println("Step: $i, animals: ${animals.size}, kites: ${countKites(predators)}, volves: ${countVolves(predators)}")
+        println("Step: $i, animals: ${animals.size}, kites: ${countKites(predators)}, volves: ${countWolves(predators)}")
     }
 }
