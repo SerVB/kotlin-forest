@@ -1,27 +1,27 @@
 package com.github.servb.kotlin.forest
 
-import io.kotlintest.properties.*
-import io.kotlintest.matchers.shouldBe
+import io.kotlintest.matchers.*
+import io.kotlintest.properties.forAll
 import io.kotlintest.specs.ShouldSpec
 
 class ForestTests : ShouldSpec() {
     init {
         "animals" {
-            should("match treir children") {
+            should("match their children") {
 		        var trees = ArrayList<AbstractTree>()
 		        val tree = Fir(trees)
 		        trees.add(tree)
                 
-                Squirrel(tree, Gender.MALE).create(tree, Gender.MALE)::class shouldBe Chipmunk::class
-                Chipmunk(tree, Gender.MALE).create(tree, Gender.MALE)::class shouldBe Chipmunk::class
-                Badger(tree, Gender.MALE).create(tree, Gender.MALE)::class shouldBe Badger::class
-                FlyingSquirrel(tree, Gender.MALE).create(tree, Gender.MALE)::class shouldBe FlyingSquirrel::class
-                Woodpecker(tree, Gender.MALE).create(tree, Gender.MALE)::class shouldBe Woodpecker::class
+                Squirrel(tree, Gender.MALE).create(tree, Gender.MALE) shouldBe beOfType<Squirrel>()
+                Chipmunk(tree, Gender.MALE).create(tree, Gender.MALE) shouldBe beOfType<Chipmunk>()
+                Badger(tree, Gender.MALE).create(tree, Gender.MALE) shouldBe beOfType<Badger>()
+                FlyingSquirrel(tree, Gender.MALE).create(tree, Gender.MALE) shouldBe beOfType<FlyingSquirrel>()
+                Woodpecker(tree, Gender.MALE).create(tree, Gender.MALE) shouldBe beOfType<Woodpecker>()
             }
         }
         
         "predator count" {
-            should("work properly ;)") {
+            should("count the same count") {
                 forAll({ kites: Int, wolves: Int ->
 	                var trees = ArrayList<AbstractTree>()
 	                val tree = Fir(trees)
