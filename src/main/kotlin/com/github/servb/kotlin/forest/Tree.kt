@@ -26,49 +26,55 @@ package com.github.servb.kotlin.forest
 import java.util.ArrayList;
 
 enum class Food {
-	NO,
-	NUT,
-	CONE,
-	LEAVE,
-	WORM,
-	ROOT;
+    NO,
+    NUT,
+    CONE,
+    LEAF,
+    WORM,
+    ROOT;
 }
 
-data class Part(var food : Food, var count : Int)
+enum class TreePlace {
+    CROWN,
+    TRUNK,
+    ROOTS;
+}
+
+data class TreePart(var food : Food, var count : Int)
 
 val COUNT = 1
 val UPDATE_RATE = 4
 val INCREMENT = 20
 
-open class AbstractTree(var nearTrees : ArrayList<AbstractTree>,
-						var top : Part,
-						var middle : Part,
-						var bottom : Part) {
+abstract class Tree(var nearTrees : MutableList<Tree>,
+                    var crown: TreePart,
+                    var trunk: TreePart,
+                    var roots: TreePart) {
 
-	fun update() {
-		if (random.nextInt(UPDATE_RATE) == 0) {
-			top.count += INCREMENT
-			middle.count += INCREMENT
-			bottom.count += INCREMENT
-		}
-	}
-	
+    fun update() {
+        if (random.nextInt(UPDATE_RATE) == 0) {
+            crown.count += INCREMENT
+            trunk.count += INCREMENT
+            roots.count += INCREMENT
+        }
+    }
+    
 }
 
-class Fir(nearTrees : ArrayList<AbstractTree>)
-	: AbstractTree(nearTrees, Part(Food.CONE, COUNT), Part(Food.WORM, COUNT), Part(Food.CONE, COUNT))
+class Fir(nearTrees : MutableList<Tree>)
+    : Tree(nearTrees, TreePart(Food.CONE, COUNT), TreePart(Food.WORM, COUNT), TreePart(Food.CONE, COUNT))
 
-class Pine(nearTrees : ArrayList<AbstractTree>)
-	: AbstractTree(nearTrees, Part(Food.CONE, COUNT), Part(Food.WORM, COUNT), Part(Food.CONE, COUNT))
+class Pine(nearTrees : MutableList<Tree>)
+    : Tree(nearTrees, TreePart(Food.CONE, COUNT), TreePart(Food.WORM, COUNT), TreePart(Food.CONE, COUNT))
 
-class Oak(nearTrees : ArrayList<AbstractTree>)
-	: AbstractTree(nearTrees, Part(Food.LEAVE, COUNT), Part(Food.WORM, COUNT), Part(Food.ROOT, COUNT))
+class Oak(nearTrees : MutableList<Tree>)
+    : Tree(nearTrees, TreePart(Food.LEAF, COUNT), TreePart(Food.WORM, COUNT), TreePart(Food.ROOT, COUNT))
 
-class Birch(nearTrees : ArrayList<AbstractTree>)
-	: AbstractTree(nearTrees, Part(Food.LEAVE, COUNT), Part(Food.WORM, COUNT), Part(Food.ROOT, COUNT))
+class Birch(nearTrees : MutableList<Tree>)
+    : Tree(nearTrees, TreePart(Food.LEAF, COUNT), TreePart(Food.WORM, COUNT), TreePart(Food.ROOT, COUNT))
 
-class Maple(nearTrees : ArrayList<AbstractTree>)
-	: AbstractTree(nearTrees, Part(Food.LEAVE, COUNT), Part(Food.WORM, COUNT), Part(Food.ROOT, COUNT))
+class Maple(nearTrees : MutableList<Tree>)
+    : Tree(nearTrees, TreePart(Food.LEAF, COUNT), TreePart(Food.WORM, COUNT), TreePart(Food.ROOT, COUNT))
 
-class Walnut(nearTrees : ArrayList<AbstractTree>)
-	: AbstractTree(nearTrees, Part(Food.NUT, COUNT), Part(Food.WORM, COUNT), Part(Food.NUT, COUNT))
+class Walnut(nearTrees : MutableList<Tree>)
+    : Tree(nearTrees, TreePart(Food.NUT, COUNT), TreePart(Food.WORM, COUNT), TreePart(Food.NUT, COUNT))

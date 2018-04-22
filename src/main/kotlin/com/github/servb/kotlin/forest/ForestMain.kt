@@ -28,47 +28,19 @@ import java.util.Random
 val random = Random()
 
 fun main(args : Array<String>) {
-    var trees = ArrayList<AbstractTree>()
-    for (i in 1..5) {
-        trees.add(Fir(trees))
-        trees.add(Pine(trees))
-        trees.add(Oak(trees))
-        trees.add(Birch(trees))
-        trees.add(Maple(trees))
-        trees.add(Walnut(trees))
-    }
+    var trees = createForest()
     
-    var animals = ArrayList<AbstractAnimal>()
+    var animals = createAnimalsOnTrees(trees)
     
-    for (i in 1..10) {
-        animals.add(Squirrel(trees[0], Gender.MALE))
-        animals.add(Squirrel(trees[1], Gender.FEMALE))
-        
-        animals.add(Chipmunk(trees[0], Gender.MALE))
-        animals.add(Chipmunk(trees[1], Gender.FEMALE))
-        
-        animals.add(Badger(trees[0], Gender.MALE))
-        animals.add(Badger(trees[1], Gender.FEMALE))
-        
-        animals.add(FlyingSquirrel(trees[0], Gender.MALE))
-        animals.add(FlyingSquirrel(trees[1], Gender.FEMALE))
-        
-        animals.add(Woodpecker(trees[0], Gender.MALE))
-        animals.add(Woodpecker(trees[1], Gender.FEMALE))
-    }
-    
-    var predators = ArrayList<Predator>()
-    for (i in 1..5) {
-        predators.add(Kite(trees[0], Gender.MALE))
-        predators.add(Kite(trees[1], Gender.FEMALE))
-        predators.add(Wolf(trees[0], Gender.MALE))
-        predators.add(Wolf(trees[1], Gender.FEMALE))
-    }
+    var predators = createPredatorsOnTrees(trees)
 
-    var newAnimals = ArrayList<AbstractAnimal>()
+    var newAnimals = ArrayList<Animal>()
     var newPredators = ArrayList<Predator>()
     
-    for (i in 1..100) {
+    for (i in 1..100) { // Main cycle
+        animals.shuffle()
+        predators.shuffle()
+
         for (tree in trees) {
             tree.update()
         }
@@ -76,20 +48,20 @@ fun main(args : Array<String>) {
         var j = 0
         while (j < animals.size) {
             animals[j].update(animals, newAnimals)
-            if (animals[j].foodLevel <= FOOD_DIE) {
+            if (animals[j].isDead) {
                 animals.removeAt(j)
             } else {
                 ++j
             }
         }
-        
+
         animals.addAll(newAnimals)
         newAnimals.clear()
         
         j = 0
         while (j < predators.size) {
             predators[j].update(animals, predators, newPredators)
-            if (predators[j].foodLevel <= FOOD_DIE) {
+            if (predators[j].isDead) {
                 predators.removeAt(j)
             } else {
                 ++j
@@ -99,6 +71,60 @@ fun main(args : Array<String>) {
         predators.addAll(newPredators)
         newPredators.clear()
         
-        println("Step: $i, animals: ${animals.size}, kites: ${countKites(predators)}, volves: ${countWolves(predators)}")
+        println("Step: $i, animals: ${animals.size}, " +
+                "kites: ${countKites(predators)}, wolves: ${countWolves(predators)}")
     }
+}
+
+fun createForest() : MutableList<Tree> {
+    var trees = ArrayList<Tree>()
+    for (i in 1..5) {
+        trees.add(Fir(ArrayList()))
+        trees.add(Pine(ArrayList()))
+        trees.add(Oak(ArrayList()))
+        trees.add(Birch(ArrayList()))
+        trees.add(Maple(ArrayList()))
+        trees.add(Walnut(ArrayList()))
+    }
+    for (i in trees.indices) {
+        for (edgeDelta in 1..5) {
+            val nextTreeIdx = (i + edgeDelta) % trees.size
+            val nextTree = trees[nextTreeIdx]
+            trees[i].nearTrees.add(nextTree)
+        }
+    }
+    return trees
+}
+
+fun createAnimalsOnTrees(trees : List<Tree>) : MutableList<Animal> {
+    var animals = ArrayList<Animal>()
+
+    for (i in 1..10) {
+        animals.add(Squirrel(trees[(i + 1) % trees.size], Gender.MALE))
+        animals.add(Squirrel(trees[(i + 2) % trees.size], Gender.FEMALE))
+
+        animals.add(Chipmunk(trees[(i + 1) % trees.size], Gender.MALE))
+        animals.add(Chipmunk(trees[(i + 2) % trees.size], Gender.FEMALE))
+
+        animals.add(Badger(trees[(i + 1) % trees.size], Gender.MALE))
+        animals.add(Badger(trees[(i + 2) % trees.size], Gender.FEMALE))
+
+        animals.add(FlyingSquirrel(trees[(i + 1) % trees.size], Gender.MALE))
+        animals.add(FlyingSquirrel(trees[(i + 2) % trees.size], Gender.FEMALE))
+
+        animals.add(Woodpecker(trees[(i + 1) % trees.size], Gender.MALE))
+        animals.add(Woodpecker(trees[(i + 2) % trees.size], Gender.FEMALE))
+    }
+    return animals
+}
+
+fun createPredatorsOnTrees(trees : List<Tree>) : MutableList<Predator> {
+    var predators = ArrayList<Predator>()
+    for (i in 1..4) {
+        predators.add(Kite(trees[(i + 1) % trees.size], Gender.MALE))
+        predators.add(Kite(trees[(i + 2) % trees.size], Gender.FEMALE))
+        predators.add(Wolf(trees[(i + 1) % trees.size], Gender.MALE))
+        predators.add(Wolf(trees[(i + 2) % trees.size], Gender.FEMALE))
+    }
+    return predators
 }
