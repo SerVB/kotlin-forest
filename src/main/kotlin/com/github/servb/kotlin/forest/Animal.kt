@@ -23,32 +23,31 @@
  */
 package com.github.servb.kotlin.forest
 
-val FOOD_LEVEL = 3
-val CHILD_RATE = 2
-val CHILD_COUNT = 6
-val FOOD_DIE_LEVEL = 0
-val MAX_POPULATION = 5000
+const val FOOD_LEVEL = 3
+const val CHILD_RATE = 2
+const val CHILD_COUNT = 6
+const val FOOD_DIE_LEVEL = 0
+const val MAX_POPULATION = 5000
 
 enum class Gender {
     FEMALE,
     MALE;
 }
 
-data class LoveFood(val food : Food, val place : TreePlace)
+data class LoveFood(val food: Food, val place: TreePlace)
 
-abstract class Animal(var nowTree : Tree,
-                      val gender : Gender,
-                      val loveFood : LoveFood,
-                      var foodLevel : Int = FOOD_LEVEL) {
+abstract class Animal(var nowTree: Tree,
+                      val gender: Gender,
+                      val loveFood: LoveFood,
+                      private var foodLevel: Int = FOOD_LEVEL) {
 
-    val isDead
-        get() = foodLevel <= FOOD_DIE_LEVEL
+    val isDead get() = foodLevel <= FOOD_DIE_LEVEL
 
-    fun update(animals : MutableList<Animal>, newAnimals : MutableList<Animal>) {
+    fun update(animals: MutableList<Animal>, newAnimals: MutableList<Animal>) {
         --foodLevel
-        
+
         nowTree = nowTree.nearTrees[random.nextInt(nowTree.nearTrees.size)]
-        
+
         val part = when (loveFood.place) {
             TreePlace.CROWN -> nowTree.crown
             TreePlace.TRUNK -> nowTree.trunk
@@ -58,7 +57,7 @@ abstract class Animal(var nowTree : Tree,
             --part.count
             foodLevel = FOOD_LEVEL
         }
-        
+
         if (animals.size + newAnimals.size < MAX_POPULATION &&
                 FOOD_DIE_LEVEL < foodLevel && random.nextInt(CHILD_RATE) == 0) {
             for (animal in animals) {
@@ -72,81 +71,80 @@ abstract class Animal(var nowTree : Tree,
             }
         }
     }
-    
-    abstract fun create(nowTree : Tree, gender : Gender) : Animal
-    
+
+    abstract fun create(nowTree: Tree, gender: Gender): Animal
+
 }
 
-class Squirrel(nowTree : Tree, gender : Gender)
+class Squirrel(nowTree: Tree, gender: Gender)
     : Animal(nowTree, gender, LoveFood(Food.CONE, TreePlace.CROWN)) {
-    
-    override fun create(nowTree : Tree, gender : Gender) : Animal {
+
+    override fun create(nowTree: Tree, gender: Gender): Animal {
         return Squirrel(nowTree, gender)
     }
-    
+
 }
 
-class Chipmunk(nowTree : Tree, gender : Gender)
+class Chipmunk(nowTree: Tree, gender: Gender)
     : Animal(nowTree, gender, LoveFood(Food.CONE, TreePlace.ROOTS)) {
-    
-    override fun create(nowTree : Tree, gender : Gender) : Animal {
+
+    override fun create(nowTree: Tree, gender: Gender): Animal {
         return Chipmunk(nowTree, gender)
     }
-    
+
 }
 
-class Badger(nowTree : Tree, gender : Gender)
+class Badger(nowTree: Tree, gender: Gender)
     : Animal(nowTree, gender, LoveFood(Food.ROOT, TreePlace.ROOTS)) {
-    
-    override fun create(nowTree : Tree, gender : Gender) : Animal {
+
+    override fun create(nowTree: Tree, gender: Gender): Animal {
         return Badger(nowTree, gender)
     }
-    
+
 }
 
-class FlyingSquirrel(nowTree : Tree, gender : Gender)
+class FlyingSquirrel(nowTree: Tree, gender: Gender)
     : Animal(nowTree, gender, LoveFood(Food.LEAF, TreePlace.CROWN)) {
-    
-    override fun create(nowTree : Tree, gender : Gender) : Animal {
+
+    override fun create(nowTree: Tree, gender: Gender): Animal {
         return FlyingSquirrel(nowTree, gender)
     }
-    
+
 }
 
-class Woodpecker(nowTree : Tree, gender : Gender)
+class Woodpecker(nowTree: Tree, gender: Gender)
     : Animal(nowTree, gender, LoveFood(Food.WORM, TreePlace.TRUNK)) {
-    
-    override fun create(nowTree : Tree, gender : Gender) : Animal {
+
+    override fun create(nowTree: Tree, gender: Gender): Animal {
         return Woodpecker(nowTree, gender)
     }
-    
-}
-
-abstract class Predator(var nowTree : Tree,
-                        val gender : Gender,
-                        var foodLevel : Int = FOOD_LEVEL) {
-
-    val isDead
-        get() = foodLevel <= FOOD_DIE_LEVEL
-    
-    abstract fun update(animals : MutableList<Animal>,
-                        predators : MutableList<Predator>, newPredators : MutableList<Predator>)
 
 }
 
-val KITE_CAN_EAT = 1
-val MAX_KITES = 30
+abstract class Predator(var nowTree: Tree,
+                        val gender: Gender,
+                        protected var foodLevel: Int = FOOD_LEVEL) {
 
-fun countKites(predators : MutableList<Predator>) = predators.filter { it::class == Kite::class }.size
+    val isDead get() = foodLevel <= FOOD_DIE_LEVEL
 
-class Kite(nowTree : Tree, gender : Gender) : Predator(nowTree, gender) {
-    
-    override fun update(animals : MutableList<Animal>,
-                        predators : MutableList<Predator>, newPredators : MutableList<Predator>) {
+    abstract fun update(animals: MutableList<Animal>,
+                        predators: MutableList<Predator>, newPredators: MutableList<Predator>)
+
+}
+
+const val KITE_CAN_EAT = 1
+const val MAX_KITES = 30
+
+fun countKites(predators: MutableList<Predator>) = predators.filter { it::class == Kite::class }.size
+
+class Kite(nowTree: Tree, gender: Gender) : Predator(nowTree, gender) {
+
+    override fun update(animals: MutableList<Animal>,
+                        predators: MutableList<Predator>, newPredators: MutableList<Predator>) {
         --foodLevel
-        
+
         nowTree = nowTree.nearTrees[random.nextInt(nowTree.nearTrees.size)]
-        
+
         var eaten = 0
         var i = 0
         while (i < animals.size) {
@@ -161,7 +159,7 @@ class Kite(nowTree : Tree, gender : Gender) : Predator(nowTree, gender) {
                 break
             }
         }
-        
+
         if (countKites(predators) + countKites(newPredators) < MAX_KITES &&
                 FOOD_DIE_LEVEL < foodLevel && random.nextInt(CHILD_RATE) == 0) {
             for (kite in predators) {
@@ -175,22 +173,22 @@ class Kite(nowTree : Tree, gender : Gender) : Predator(nowTree, gender) {
             }
         }
     }
-    
+
 }
 
-val WOLF_CAN_EAT = 1
-val MAX_VOLVES = 30
+const val WOLF_CAN_EAT = 1
+const val MAX_WOLVES = 30
 
-fun countWolves(predators : MutableList<Predator>)  = predators.filter { it::class == Wolf::class }.size
+fun countWolves(predators: MutableList<Predator>) = predators.filter { it::class == Wolf::class }.size
 
-class Wolf(nowTree : Tree, gender : Gender) : Predator(nowTree, gender) {
-    
-    override fun update(animals : MutableList<Animal>,
-                        predators : MutableList<Predator>, newPredators : MutableList<Predator>) {
+class Wolf(nowTree: Tree, gender: Gender) : Predator(nowTree, gender) {
+
+    override fun update(animals: MutableList<Animal>,
+                        predators: MutableList<Predator>, newPredators: MutableList<Predator>) {
         --foodLevel
-        
+
         nowTree = nowTree.nearTrees[random.nextInt(nowTree.nearTrees.size)]
-        
+
         var eaten = 0
         var i = 0
         while (i < animals.size) {
@@ -205,8 +203,8 @@ class Wolf(nowTree : Tree, gender : Gender) : Predator(nowTree, gender) {
                 break
             }
         }
-        
-        if (countWolves(predators) + countWolves(newPredators) < MAX_VOLVES &&
+
+        if (countWolves(predators) + countWolves(newPredators) < MAX_WOLVES &&
                 FOOD_DIE_LEVEL < foodLevel && random.nextInt(CHILD_RATE) == 0) {
             for (wolf in predators) {
                 if (wolf::class == Wolf::class &&
@@ -219,5 +217,5 @@ class Wolf(nowTree : Tree, gender : Gender) : Predator(nowTree, gender) {
             }
         }
     }
-    
+
 }

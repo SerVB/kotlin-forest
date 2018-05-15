@@ -27,16 +27,16 @@ import java.util.Random
 
 val random = Random()
 
-fun main(args : Array<String>) {
-    var trees = createForest()
-    
-    var animals = createAnimalsOnTrees(trees)
-    
-    var predators = createPredatorsOnTrees(trees)
+fun main(args: Array<String>) {
+    val trees = createForest()
 
-    var newAnimals = ArrayList<Animal>()
-    var newPredators = ArrayList<Predator>()
-    
+    val animals = createAnimalsOnTrees(trees)
+
+    val predators = createPredatorsOnTrees(trees)
+
+    val newAnimals = ArrayList<Animal>()
+    val newPredators = ArrayList<Predator>()
+
     for (i in 1..100) { // Main cycle
         animals.shuffle()
         predators.shuffle()
@@ -44,7 +44,7 @@ fun main(args : Array<String>) {
         for (tree in trees) {
             tree.update()
         }
-        
+
         var j = 0
         while (j < animals.size) {
             animals[j].update(animals, newAnimals)
@@ -57,7 +57,7 @@ fun main(args : Array<String>) {
 
         animals.addAll(newAnimals)
         newAnimals.clear()
-        
+
         j = 0
         while (j < predators.size) {
             predators[j].update(animals, predators, newPredators)
@@ -67,17 +67,18 @@ fun main(args : Array<String>) {
                 ++j
             }
         }
-        
+
         predators.addAll(newPredators)
         newPredators.clear()
-        
+
         println("Step: $i, animals: ${animals.size}, " +
                 "kites: ${countKites(predators)}, wolves: ${countWolves(predators)}")
     }
 }
 
-fun createForest() : MutableList<Tree> {
-    var trees = ArrayList<Tree>()
+fun createForest(): MutableList<Tree> {
+    val trees = ArrayList<Tree>()
+
     for (i in 1..5) {
         trees.add(Fir(ArrayList()))
         trees.add(Pine(ArrayList()))
@@ -86,6 +87,7 @@ fun createForest() : MutableList<Tree> {
         trees.add(Maple(ArrayList()))
         trees.add(Walnut(ArrayList()))
     }
+
     for (i in trees.indices) {
         for (edgeDelta in 1..5) {
             val nextTreeIdx = (i + edgeDelta) % trees.size
@@ -93,11 +95,12 @@ fun createForest() : MutableList<Tree> {
             trees[i].nearTrees.add(nextTree)
         }
     }
+
     return trees
 }
 
-fun createAnimalsOnTrees(trees : List<Tree>) : MutableList<Animal> {
-    var animals = ArrayList<Animal>()
+fun createAnimalsOnTrees(trees: List<Tree>): MutableList<Animal> {
+    val animals = ArrayList<Animal>()
 
     for (i in 1..10) {
         animals.add(Squirrel(trees[(i + 1) % trees.size], Gender.MALE))
@@ -118,13 +121,15 @@ fun createAnimalsOnTrees(trees : List<Tree>) : MutableList<Animal> {
     return animals
 }
 
-fun createPredatorsOnTrees(trees : List<Tree>) : MutableList<Predator> {
-    var predators = ArrayList<Predator>()
+fun createPredatorsOnTrees(trees: List<Tree>): MutableList<Predator> {
+    val predators = ArrayList<Predator>()
+
     for (i in 1..4) {
         predators.add(Kite(trees[(i + 1) % trees.size], Gender.MALE))
         predators.add(Kite(trees[(i + 2) % trees.size], Gender.FEMALE))
         predators.add(Wolf(trees[(i + 1) % trees.size], Gender.MALE))
         predators.add(Wolf(trees[(i + 2) % trees.size], Gender.FEMALE))
     }
+
     return predators
 }

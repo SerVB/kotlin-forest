@@ -23,8 +23,6 @@
  */
 package com.github.servb.kotlin.forest
 
-import java.util.ArrayList;
-
 enum class Food {
     NO,
     NUT,
@@ -40,16 +38,16 @@ enum class TreePlace {
     ROOTS;
 }
 
-data class TreePart(var food : Food, var count : Int)
+data class TreePart(val food: Food, var count: Int)
 
-val COUNT = 1
-val UPDATE_RATE = 4
-val INCREMENT = 20
+const val COUNT = 1
+const val UPDATE_RATE = 4
+const val INCREMENT = 20
 
-abstract class Tree(var nearTrees : MutableList<Tree>,
-                    var crown: TreePart,
-                    var trunk: TreePart,
-                    var roots: TreePart) {
+abstract class Tree(val nearTrees: MutableList<Tree>,
+                    val crown: TreePart,
+                    val trunk: TreePart,
+                    val roots: TreePart) {
 
     fun update() {
         if (random.nextInt(UPDATE_RATE) == 0) {
@@ -58,23 +56,23 @@ abstract class Tree(var nearTrees : MutableList<Tree>,
             roots.count += INCREMENT
         }
     }
-    
+
 }
 
-class Fir(nearTrees : MutableList<Tree>)
+class Fir(nearTrees: MutableList<Tree>)
     : Tree(nearTrees, TreePart(Food.CONE, COUNT), TreePart(Food.WORM, COUNT), TreePart(Food.CONE, COUNT))
 
-class Pine(nearTrees : MutableList<Tree>)
+class Pine(nearTrees: MutableList<Tree>)
     : Tree(nearTrees, TreePart(Food.CONE, COUNT), TreePart(Food.WORM, COUNT), TreePart(Food.CONE, COUNT))
 
-class Oak(nearTrees : MutableList<Tree>)
+class Oak(nearTrees: MutableList<Tree>)
     : Tree(nearTrees, TreePart(Food.LEAF, COUNT), TreePart(Food.WORM, COUNT), TreePart(Food.ROOT, COUNT))
 
-class Birch(nearTrees : MutableList<Tree>)
+class Birch(nearTrees: MutableList<Tree>)
     : Tree(nearTrees, TreePart(Food.LEAF, COUNT), TreePart(Food.WORM, COUNT), TreePart(Food.ROOT, COUNT))
 
-class Maple(nearTrees : MutableList<Tree>)
+class Maple(nearTrees: MutableList<Tree>)
     : Tree(nearTrees, TreePart(Food.LEAF, COUNT), TreePart(Food.WORM, COUNT), TreePart(Food.ROOT, COUNT))
 
-class Walnut(nearTrees : MutableList<Tree>)
+class Walnut(nearTrees: MutableList<Tree>)
     : Tree(nearTrees, TreePart(Food.NUT, COUNT), TreePart(Food.WORM, COUNT), TreePart(Food.NUT, COUNT))
