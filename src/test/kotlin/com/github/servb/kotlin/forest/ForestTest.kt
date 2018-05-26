@@ -12,27 +12,25 @@ class ForestTests : ShouldSpec() {
                 val tree = Fir(trees)
                 trees.add(tree)
 
-                Squirrel(tree, Gender.MALE).create(tree, Gender.MALE) shouldBe beOfType<Squirrel>()
-                Chipmunk(tree, Gender.MALE).create(tree, Gender.MALE) shouldBe beOfType<Chipmunk>()
-                Badger(tree, Gender.MALE).create(tree, Gender.MALE) shouldBe beOfType<Badger>()
-                FlyingSquirrel(tree, Gender.MALE).create(tree, Gender.MALE) shouldBe beOfType<FlyingSquirrel>()
-                Woodpecker(tree, Gender.MALE).create(tree, Gender.MALE) shouldBe beOfType<Woodpecker>()
+                Squirrel(tree, Gender.MALE).create(tree, Gender.MALE) should beOfType<Squirrel>()
+                Chipmunk(tree, Gender.MALE).create(tree, Gender.MALE) should beOfType<Chipmunk>()
+                Badger(tree, Gender.MALE).create(tree, Gender.MALE) should beOfType<Badger>()
+                FlyingSquirrel(tree, Gender.MALE).create(tree, Gender.MALE) should beOfType<FlyingSquirrel>()
+                Woodpecker(tree, Gender.MALE).create(tree, Gender.MALE) should beOfType<Woodpecker>()
             }
         }
 
         "predator count" {
             should("count the same count") {
-//                forAll({ kites: Int, wolves: Int ->
-                    val kites = random.nextInt()
-                    val wolves = random.nextInt()
+                forAll { kites: Int, wolves: Int ->
                     val trees = ArrayList<Tree>()
                     val tree = Fir(trees)
                     trees.add(tree)
 
                     val COUNT_LIMIT = 107
 
-                    val kitesCount = kites % COUNT_LIMIT
-                    val wolvesCount = wolves % COUNT_LIMIT
+                    val kitesCount = Math.abs(kites % COUNT_LIMIT)
+                    val wolvesCount = Math.abs(wolves % COUNT_LIMIT)
 
                     val predators = ArrayList<Predator>()
                     for (i in 1..kitesCount) {
@@ -44,7 +42,7 @@ class ForestTests : ShouldSpec() {
                     }
 
                     countKites(predators) == kitesCount && countWolves(predators) == wolvesCount
-//                })
+                }
             }
         }
 
